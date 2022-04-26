@@ -25,9 +25,23 @@ fn clear_bss() {
     });
 }
 
+fn print_memory() {
+    extern "C" {
+        fn stext();
+        fn etext();
+        fn srodata();
+        fn erodata();
+        fn sdata();
+        fn edata();
+    }
+    info!(".text [{:#x}, {:#x})", stext as usize, etext as usize);
+    debug!(".rodata [{:#x}, {:#x})", srodata as usize, erodata as usize);
+    error!(".data [{:#x}, {:#x})", sdata as usize, edata as usize);
+}
+
 #[no_mangle]
 fn rust_main() {
     clear_bss();
-    println!("Hello, world!");
+    print_memory();
     panic!("Shutdown machine!");
 }
