@@ -10,8 +10,13 @@ mod console;
 mod lang_items;
 mod sbi;
 mod memory;
+mod batch;
+mod sync;
+mod trap;
+mod syscall;
 
 global_asm!(include_str!("entry.asm"));
+global_asm!(include_str!("link_app.S"));
 
 fn clear_bss() {
     extern "C" {
@@ -37,6 +42,9 @@ fn print_memory() {
     info!(".text [{:#x}, {:#x})", stext as usize, etext as usize);
     debug!(".rodata [{:#x}, {:#x})", srodata as usize, erodata as usize);
     error!(".data [{:#x}, {:#x})", sdata as usize, edata as usize);
+    trap::init();
+    batch::init();
+    batch::run_next_app();
 }
 
 #[no_mangle]
