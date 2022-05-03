@@ -7,13 +7,15 @@ use core::arch::global_asm;
 
 #[macro_use]
 mod console;
+mod config;
 mod lang_items;
+mod loader;
 mod sbi;
 mod memory;
-mod batch;
 mod sync;
-mod trap;
-mod syscall;
+pub mod trap;
+pub mod syscall;
+pub mod task;
 
 global_asm!(include_str!("entry.asm"));
 global_asm!(include_str!("link_app.S"));
@@ -32,13 +34,14 @@ fn clear_bss() {
 
 fn print_memory() {
     trap::init();
-    batch::init();
-    batch::run_next_app();
 }
 
 #[no_mangle]
 fn rust_main() {
     clear_bss();
     print_memory();
-    panic!("Shutdown machine!");
+    trap::init();
+    loader::load_apps();
+    task::run_first_task();
+    panic!("Unreachable in rust_main!");
 }

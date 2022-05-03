@@ -31,6 +31,10 @@ pub fn exit(exit_code: i32) -> isize {
     sys_exit(exit_code)
 }
 
+pub fn yield_() -> isize {
+    sys_yield()
+}
+
 fn clear_bss() {
     extern "C" {
         fn start_bss();
@@ -40,5 +44,3 @@ fn clear_bss() {
         (addr as *mut u8).write_volatile(0);
     });
 }
-
-
