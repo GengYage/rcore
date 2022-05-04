@@ -44,3 +44,7 @@ fn clear_bss() {
         (addr as *mut u8).write_volatile(0);
     });
 }
+
+pub fn get_time() -> isize {
+    sys_get_time()
+}

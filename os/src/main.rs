@@ -5,6 +5,8 @@
 
 use core::arch::global_asm;
 
+use crate::time::set_next_trigger;
+
 #[macro_use]
 mod console;
 mod config;
@@ -13,6 +15,7 @@ mod loader;
 mod sbi;
 mod memory;
 mod sync;
+mod time;
 pub mod trap;
 pub mod syscall;
 pub mod task;
@@ -42,6 +45,8 @@ fn rust_main() {
     print_memory();
     trap::init();
     loader::load_apps();
+    trap::enable_timer_interrupt();
+    set_next_trigger();
     task::run_first_task();
     panic!("Unreachable in rust_main!");
 }
